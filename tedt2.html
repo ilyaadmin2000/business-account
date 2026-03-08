@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бизнес счёт - Виртуальный банк</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .login-section, .account-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .balance-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-amount {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .balance-label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .button.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .button.success {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #333;
+        }
+
+        .button.developer {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+            border: 2px solid #ffd700;
+        }
+
+        .transaction-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .user-id {
+            font-size: 1.2em;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .developer-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            padding: 8px 20px;
+            width: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .developer-section {
+            border-top: 3px solid #ffd700;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+
+        .dev-title {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            font-size: 1.2em;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Бизнес счёт</h1>
+            <p>Введите ID для входа в систему</p>
+        </div>
+
+        <!-- Форма входа -->
+        <div id="loginSection" class="login-section">
+            <div class="input-group">
+                <label>Ваш ID:</label>
+                <input type="text" id="userId" placeholder="Введите ваш бизнес-ID" value="user123">
+            </div>
+            <button class="button" onclick="login()">Войти в систему</button>
+        </div>
+
+        <!-- Кабинет пользователя (изначально скрыт) -->
+        <div id="accountSection" class="account-section hidden">
+            <div class="user-info">
+                <span class="user-id" id="displayUserId"></span>
+                <button class="button logout-btn" onclick="logout()">Выйти</button>
+            </div>
+
+            <!-- Баланс -->
+            <div class="balance-section">
+                <div class="balance-label">Ваш бизнес-баланс</div>
+                <div class="balance-amount" id="balance">0</div>
+                <div>виртуальных монет</div>
+            </div>
+
+            <!-- Секция для обычных пользователей (только переводы) -->
+            <div id="userSection">
+                <div class="input-group">
+                    <label>Сумма перевода:</label>
+                    <input type="number" id="amount" placeholder="Введите сумму" min="0" value="100">
+                </div>
+
+                <div class="input-group">
+                    <label>ID получателя:</label>
+                    <input type="text" id="recipientId" placeholder="Введите ID получателя">
+                </div>
+                <button class="button" onclick="transfer()">↗️ Перевести монеты</button>
+            </div>
+
+            <!-- Секция для разработчика (только для adminbuisness) -->
+            <div id="developerSection" class="developer-section hidden">
+                <div class="dev-title">⭐ АДМИНИСТРАТОР БИЗНЕСА ⭐</div>
+                
+                <div class="input-group">
+                    <label>Сумма операции:</label>
+                    <input type="number" id="devAmount" placeholder="Введите сумму" min="0" value="1000">
+                </div>
+
+                <div class="transaction-row">
+                    <button class="button developer" onclick="devDeposit()">💰 Пополнить счёт</button>
+                    <button class="button developer" onclick="devWithdraw()">💸 Снять со счёта</button>
+                </div>
+
+                <div class="input-group">
+                    <label>ID пользователя (для управления):</label>
+                    <input type="text" id="targetUserId" placeholder="Введите ID пользователя">
+                </div>
+                <button class="button developer" onclick="manageUserBalance()">⚙️ Управление балансом</button>
+            </div>
+
+            <!-- Сообщения -->
+            <div id="message" class="message"></div>
+            <div class="info-text">Все операции сохраняются в вашем браузере</div>
+        </div>
+        
+        <div class="footer">
+            <p>Бизнес счёт © 2024 | Безопасные виртуальные транзакции</p>
+        </div>
+    </div>
+
+    <script>
+        // ID разработчика (только adminbuisness)
+        const DEVELOPER_ID = 'adminbuisness';
+        
+        // База данных пользователей
+        let users = {};
+        let currentUser = null;
+
+        // Загрузка данных при старте
+        function loadData() {
+            const savedData = localStorage.getItem('businessBankUsers');
+            if (savedData) {
+                users = JSON.parse(savedData);
+            } else {
+                // Создаем тестовых пользователей
+                users = {
+                    'user123': { balance: 1000 },
+                    'user456': { balance: 500 },
+                    'partner1': { balance: 2500 },
+                    'partner2': { balance: 1500 },
+                    'adminbuisness': { balance: 50000 }
+                };
+            }
+        }
+
+        // Сохранение данных
+        function saveData() {
+            localStorage.setItem('businessBankUsers', JSON.stringify(users));
+        }
+
+        // Проверка, является ли пользователь разработчиком
+        function isDeveloper(userId) {
+            return userId === DEVELOPER_ID;
+        }
+
+        // Вход в систему
+        function login() {
+            const userId = document.getElementById('userId').value.trim();
+            
+            if (!userId) {
+                showMessage('Введите ID', 'error');
+                return;
+            }
+
+            // Если пользователь новый, создаем его с балансом 1000
+            if (!users[userId]) {
+                users[userId] = { balance: 1000 };
+                saveData();
+            }
+
+            currentUser = userId;
+            
+            // Показываем кабинет и скрываем форму входа
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('accountSection').classList.remove('hidden');
+            
+            // Отображаем данные
+            const displayName = document.getElementById('displayUserId');
+            if (isDeveloper(userId)) {
+                displayName.innerHTML = `ID: ${userId} <span class="developer-badge">АДМИНИСТРАТОР</span>`;
+                document.getElementById('developerSection').classList.remove('hidden');
+            } else {
+                displayName.textContent = `ID: ${userId}`;
+                document.getElementById('developerSection').classList.add('hidden');
+            }
+            
+            updateBalance();
+            showMessage(`Добро пожаловать в Бизнес счёт, ${userId}!`, 'success');
+        }
+
+        // Выход из системы
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('accountSection').classList.add('hidden');
+            document.getElementById('message').innerHTML = '';
+        }
+
+        // Обновление отображения баланса
+        function updateBalance() {
+            if (currentUser && users[currentUser]) {
+                document.getElementById('balance').textContent = users[currentUser].balance;
+            }
+        }
+
+        // Перевод другому пользователю (доступно всем)
+        function transfer() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const recipientId = document.getElementById('recipientId').value.trim();
+            
+            if (!validateAmount(amount)) return;
+            
+            if (!recipientId) {
+                showMessage('Введите ID получателя', 'error');
+                return;
+            }
+            
+            if (recipientId === currentUser) {
+                showMessage('Нельзя перевести самому себе', 'error');
+                return;
+            }
+            
+            if (users[currentUser].balance < amount) {
+                showMessage('Недостаточно средств', 'error');
+                return;
+            }
+            
+            // Если получатель не существует, создаем его с нулевым балансом
+            if (!users[recipientId]) {
+                users[recipientId] = { balance: 0 };
+            }
+            
+            // Выполняем перевод
+            users[currentUser].balance -= amount;
+            users[recipientId].balance += amount;
+            
+            saveData();
+            updateBalance();
+            showMessage(`✅ Переведено ${amount} монет пользователю ${recipientId}`, 'success');
+            
+            // Очищаем поле получателя
+            document.getElementById('recipientId').value = '';
+        }
+
+        // Функции разработчика для пополнения/снятия
+        function devDeposit() {
+            if (!isDeveloper(currentUser)) {
+                showMessage('❌ Доступно только администратору!', 'error');
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('devAmount').value);
+            
+            if (!validateAmount(amount)) return;
+            
+            users[currentUser].balance += amount;
+            saveData();
+            updateBalance();
+            showMessage(`💰 Счёт пополнен на ${amount} монет`, 'success');
+        }
+
+        function devWithdraw() {
+            if (!isDeveloper(currentUser)) {
+                showMessage('❌ Доступно только администратору!', 'error');
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById('devAmount').value);
+            
+            if (!validateAmount(amount)) return;
+            
+            if (users[currentUser].balance < amount) {
+                showMessage('❌ Недостаточно средств', 'error');
+                return;
+            }
+            
+            users[currentUser].balance -= amount;
+            saveData();
+            updateBalance();
+            showMessage(`💸 Снято ${amount} монет`, 'success');
+        }
+
+        // Управление балансом другого пользователя (только для разработчика)
+        function manageUserBalance() {
+            if (!isDeveloper(currentUser)) {
+                showMessage('❌ Доступно только администратору!', 'error');
+                return;
+            }
+            
+            const targetUserId = document.getElementById('targetUserId').value.trim();
+            const amount = parseFloat(document.getElementById('devAmount').value);
+            
+            if (!targetUserId) {
+                showMessage('❌ Введите ID пользователя', 'error');
+                return;
+            }
+            
+            if (!validateAmount(amount)) return;
+            
+            // Если пользователь не существует, создаем его
+            if (!users[targetUserId]) {
+                users[targetUserId] = { balance: 0 };
+            }
+            
+            // Добавляем сумму к балансу пользователя
+            users[targetUserId].balance += amount;
+            
+            saveData();
+            showMessage(`✅ Пользователю ${targetUserId} добавлено ${amount} монет`, 'success');
+            document.getElementById('targetUserId').value = '';
+        }
+
+        // Проверка суммы
+        function validateAmount(amount) {
+            if (isNaN(amount) || amount <= 0) {
+                showMessage('❌ Введите корректную сумму (больше 0)', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        // Показ сообщений
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type === 'success' ? 'success-message' : 'error-message'}`;
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+                messageDiv.className = 'message';
+            }, 3000);
+        }
+
+        // Загружаем данные при запуске
+        loadData();
+
+        // Добавляем тестовых пользователей при первом запуске
+        window.onload = function() {
+            if (!users['user123']) {
+                users['user123'] = { balance: 1000 };
+                users['adminbuisness'] = { balance: 50000 };
+                users['partner1'] = { balance: 2500 };
+                users['partner2'] = { balance: 1500 };
+                saveData();
+            }
+        }
+    </script>
+</body>
+</html>
